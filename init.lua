@@ -2,6 +2,8 @@ vim.g.mapleader = " "
 vim.keymap.set("n", "gt", "<C-w>l", { noremap = true, silent = true }) -- Move to the right split
 vim.keymap.set("n", "gp", "<C-w>h", { noremap = true, silent = true }) -- Move to the left split
 vim.keymap.set("n", "<leader>q", "<C-q>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>gt", ":ToggleTerm<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("t", "<C-x>", "<C-\\><C-n>:ToggleTerm<CR>", { noremap = true, silent = true })
 --lazy setup
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
