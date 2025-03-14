@@ -9,6 +9,6 @@ return {
 	config = function()
 		--  -- NeoTree
 		vim.keymap.set("n", "<leader>n", ":Neotree filesystem reveal left<CR>")
-		vim.keymap.set("n", "<leader>n", ":Neotree close <CR>")
+		vim.keymap.set("n", "<leader><leader>n", ":Neotree close <CR>")
 	end,
 }
