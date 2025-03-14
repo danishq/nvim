@@ -27,26 +27,29 @@ return {
 		config = function()
 			local lspconfig = require("lspconfig")
 
-			-- ✅ Define `on_attach` globally
+			-- Detect OS
+			local is_windows = vim.fn.has("win32") == 1
+
+			-- Global `on_attach` function
 			local on_attach = function(client, bufnr)
-				-- Keybindings for all LSPs
 				vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr })
 				vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = bufnr })
 				vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { buffer = bufnr })
 			end
 
-			-- Lua Language Server
+			-- Lua Language Server (Cross-Platform)
 			vim.defer_fn(function()
 				lspconfig.lua_ls.setup({
-					cmd = { "C:/Users/dqure/AppData/Local/nvim-data/mason/bin/lua-language-server.cmd" }, -- Explicit path for Windows
+					cmd = is_windows and { "C:/Users/dqure/AppData/Local/nvim-data/mason/bin/lua-language-server.cmd" }
+						or { "lua-language-server" }, -- Default for Ubuntu
 					flags = { debounce_text_changes = 150 },
-					on_attach = on_attach, -- ✅ Use global `on_attach`
+					on_attach = on_attach,
 				})
-			end, 1000) -- Delay LSP setup by 1s to avoid race conditions
+			end, 1000)
 
 			-- Python LSP (Pyright)
 			lspconfig.pyright.setup({
-				on_attach = on_attach, -- ✅ Use global `on_attach`
+				on_attach = on_attach,
 				settings = {
 					python = {
 						analysis = {
@@ -57,13 +60,14 @@ return {
 				},
 			})
 
-			-- ✅ TypeScript LSP (Corrected to ts_ls)
+			-- TypeScript LSP
 			lspconfig.ts_ls.setup({ on_attach = on_attach })
 
 			-- Java LSP (jdtls)
+			local jdtls_cmd = is_windows and { "jdtls.cmd" } or { "jdtls" }
 			lspconfig.jdtls.setup({
-				on_attach = on_attach, -- ✅ Use global `on_attach`
-				cmd = { "jdtls" },
+				on_attach = on_attach,
+				cmd = jdtls_cmd,
 				root_dir = lspconfig.util.root_pattern("pom.xml", "gradle.build", ".git"),
 			})
 
